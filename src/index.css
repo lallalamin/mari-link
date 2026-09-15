@@ -3,7 +3,8 @@
 }
 
 html {
-  font-family: Arial, sans-serif;
+  min-width: 320px;
+  background: #dcd8cd;
 }
 
 body {
@@ -11,10 +12,28 @@ body {
   min-width: 320px;
   min-height: 100vh;
 
-  background: #f6f0e4;
-  color: #2f302b;
+  font-family:
+    "Trebuchet MS",
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  color: inherit;
 }
 
 a {
   color: inherit;
+}
+
+#root {
+  min-height: 100vh;
 }

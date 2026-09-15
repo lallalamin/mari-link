@@ -1,75 +1,104 @@
+import { useEffect, useState } from "react";
+
 import "./App.css";
-import profilePic from "./assets/profile.jpg";
+
+import ThemeToggle from "./components/ThemeToggle";
+import Profile from "./components/Profile";
+import SocialLinks from "./components/SocialLinks";
+import LinkCard from "./components/LinkCard";
+import CurrentlyMaking from "./components/CurrentlyMaking";
+import Decorations from "./components/Decorations";
+
 import {
-  FaInstagram,
-  FaPinterest,
-  FaLinkedin,
-  FaYoutube,
-  FaGithub,
-} from "react-icons/fa";
+  mainLinks,
+  socialLinks,
+} from "./data/links";
 
 function App() {
-  const links = [
-    { title: "my art + crafts", url: "#" },
-    { title: "things i build", url: "#" },
-    { title: "youtube", url: "#" },
-    { title: "pinterest", url: "#" },
-  ];
+  const [theme, setTheme] = useState(() => {
+    const savedTheme =
+      localStorage.getItem("mari-theme");
+
+    if (savedTheme) {
+      return savedTheme;
+    }
+
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+
+    return prefersDark ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "mari-theme",
+      theme
+    );
+
+    document.documentElement.dataset.theme =
+      theme;
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme((currentTheme) =>
+      currentTheme === "light"
+        ? "dark"
+        : "light"
+    );
+  }
 
   return (
-    <main className="page">
-      <section className="profile">
-        <div className="avatar">
-          <img src={profilePic} alt="Mari" />
-        </div>
+    <div className={`site theme-${theme}`}>
+      <main className="page">
+        <Decorations />
 
-        <h1>mari ♡</h1>
+        <ThemeToggle
+          theme={theme}
+          toggleTheme={toggleTheme}
+        />
 
-        <p>
-          software engineer • artist • maker
-        </p>
-      </section>
+        <div className="page-content">
+          <Profile />
 
-      <section className="socials">
-        <div className="social-icons">
-          <a href="https://www.instagram.com/lallalamari" target="_blank" rel="noreferrer">
-            <FaInstagram />
-          </a>
+          <SocialLinks
+            links={socialLinks}
+          />
 
-          <a href="https://www.pinterest.com/lallalamari/" target="_blank" rel="noreferrer">
-            <FaPinterest />
-          </a>
+          <section className="links">
+            {mainLinks.map(
+              (link, index) => (
+                <LinkCard
+                  key={link.title}
+                  {...link}
+                  index={index}
+                />
+              )
+            )}
+          </section>
 
-          <a href="https://www.linkedin.com/in/mari-hirota/" target="_blank" rel="noreferrer">
-            <FaLinkedin />
-          </a>
+          <CurrentlyMaking />
 
-          <a href="https://www.youtube.com/@lallalamari" target="_blank" rel="noreferrer">
-            <FaYoutube />
-          </a>
-
-          <a href="https://github.com/lallalamin" target="_blank" rel="noreferrer">
-            <FaGithub />
-          </a>
-        </div>
-      </section>
-
-      <section className="links">
-        {links.map((link) => (
           <a
-            className="link-card"
-            href={link.url}
-            key={link.title}
+            href="mailto:YOUR_EMAIL@gmail.com?subject=Hello%20Mari!"
+            className="email-link"
           >
-            {link.title}
+            <span>✉</span>
+            send me a little note
           </a>
-        ))}
-      </section>
 
-      <p className="currently">
-        currently making: tiny cyberdeck 🌱
-      </p>
-    </main>
+          <footer className="footer">
+            <span>made with ♡ by mari</span>
+
+            <span className="footer-flower">
+              ✿
+            </span>
+          </footer>
+        </div>
+      </main>
+    </div>
   );
 }
 
